@@ -1,0 +1,6 @@
+[submodule "external/taglib"]
+	path = external/taglib
+	url = git@github.com:taglib/taglib.git
+[submodule "external/json"]
+	path = external/json
+	url = git@github.com:nlohmann/json.git
