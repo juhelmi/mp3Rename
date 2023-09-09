@@ -1,12 +1,14 @@
 set(LIBRARY_SOURCES
     "my_lib.cc"
-    "mp3Tags.cpp")
+    "mp3Tags.cpp"
+    "mp3CharConversion.cpp")
 set(LIBRARY_HEADERS
     "my_lib.h"
     "mp3Tags.hpp"
     "utf8.h"     "utf8/core.h"
     "utf8/checked.h"
-    "utf8/unchecked.h")
+    "utf8/unchecked.h"
+    "mp3CharConversion.hpp" )
 
 add_library(${LIBRARY_NAME} STATIC
     ${LIBRARY_SOURCES}
