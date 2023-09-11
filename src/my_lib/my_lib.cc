@@ -25,7 +25,7 @@
 #include <boost/filesystem.hpp>
 #include <filesystem>
 
-#include <map>
+// #include <map>  // my_lib.h
 #include <list>
 
 #include <bits/stdc++.h>
@@ -74,11 +74,12 @@ vector< pair<fs::path, Mp3Tags>> get_files_under_directory(fs::path dir, std::st
     return result;
 }
 
-void print_tags_for_files(int argc, char **argv)
+rename_map_t print_tags_for_files(int argc, char **argv)
 {
     fs::path fpath;
     std::map<string, Mp3Tags> m;
     vector<Mp3Tags> skippedFiles;
+    rename_map_t result;    // use smart_ptr later
 
     if (argc == 1)
     {
@@ -98,6 +99,7 @@ void print_tags_for_files(int argc, char **argv)
             {
                 //std::cout  << v.toString() << std::endl;
                 mp3Count++;
+                result.insert({k, v.getCombinedName()});
             } else {
                 skippedFiles.insert(skippedFiles.end(), v);
             }
@@ -110,5 +112,5 @@ void print_tags_for_files(int argc, char **argv)
         std::cout << "Mp3 count " << mp3Count << " Skipped " << skippedFiles.size() << " Total " << m.size()+skippedFiles.size() << "\n";
     }
 
-    return ;
+    return result;
 }
