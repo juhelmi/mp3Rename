@@ -1,6 +1,8 @@
 # mp3Rename
 Feature study
 
+Contains cmake, boots, json and other studies. This could be done faster with Python :)
+
 ## Git submodules
 
 Used submodules are listed in .gitmodules. Contains path and url.

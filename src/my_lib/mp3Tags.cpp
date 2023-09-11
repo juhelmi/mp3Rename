@@ -29,9 +29,9 @@
 #include <fstream>
 #include "config.hpp"
 #include <boost/filesystem.hpp>
-#include <nlohmann/json.hpp>
+//#include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
+//using json = nlohmann::json;
 
 using std::string;
 using namespace std;
@@ -51,114 +51,43 @@ Mp3Tags::Mp3Tags()
 
 Mp3Tags::Mp3Tags(std::string filepath, int rootLen) : Mp3Tags()
 {
-    this->full_path = filepath;
-    this->file_index = this->running_index++;
-    if (rootLen > 0)
-    {
-        this->local_path = filepath.substr(rootLen+1);
-    } else {
-        this->local_path = filepath;
-    }
+        this->full_path = filepath;
+        this->file_index = this->running_index++;
 
-#ifdef NOT_USED
-    bool extra_print = false;
-#endif
-
-    TagLib::FileRef f(filepath.c_str());
-
-    if(!f.isNull() && f.tag())
-    {
-        TagLib::Tag *tag = f.tag();
-
-#ifdef NOT_USED
-        if (extra_print) {
-            cout << "-- TAG (basic) --" << endl;
-        }
-#endif
-        //cout << "title   - \"" << tag->title()   << "\"" << endl;
-        //cout << "artist  - \"" << tag->artist()  << "\"" << endl;
-        this->title = tag->title().toCString();
-        this->artist = tag->artist().toCString();
-#ifdef NOT_USED
-        if (extra_print) {
-            cout << "album   - \"" << tag->album()   << "\"" << endl;
-            cout << "year    - \"" << tag->year()    << "\"" << endl;
-            cout << "comment - \"" << tag->comment() << "\"" << endl;
-            cout << "track   - \"" << tag->track()   << "\"" << endl;
-            cout << "genre   - \"" << tag->genre()   << "\"" << endl;
-        }
-#endif
-
-        TagLib::PropertyMap tags = f.file()->properties();
-
-#ifdef NOT_USED
-        if (extra_print)
+        if (rootLen > 0)
         {
-            unsigned int longest = 0;
-            for (auto i = tags.cbegin(); i != tags.cend(); ++i)
-            {
-                if (i->first.size() > longest) {
-                longest = i->first.size();
-                }
-            }
-            cout << "-- TAG (properties) --" << endl;
-            for(auto i = tags.cbegin(); i != tags.cend(); ++i) {
-                for(auto j = i->second.begin(); j != i->second.end(); ++j) {
-                cout << left << std::setw(longest) << i->first << " - " << '"' << *j << '"' << endl;
-                }
-            }
+            this->local_path = filepath.substr(rootLen+1);
+        } else {
+            this->local_path = filepath;
         }
-#endif
 
-    }
+        TagLib::FileRef f(filepath.c_str());
 
-    if(!f.isNull() && f.audioProperties())
-    {
-        TagLib::AudioProperties *properties = f.audioProperties();
-
-        this->seconds = properties->lengthInSeconds();
-
-        int seconds = properties->lengthInSeconds() % 60;
-        int minutes = (properties->lengthInSeconds() - seconds) / 60;
-
-#ifdef NOT_USED
-        if (extra_print)
+        if(!f.isNull() && f.tag())
         {
-            cout << "-- AUDIO --" << endl;
-            cout << "bitrate     - " << properties->bitrate() << endl;
-            cout << "sample rate - " << properties->sampleRate() << endl;
-            cout << "channels    - " << properties->channels() << endl;
+            TagLib::Tag *tag = f.tag();
+
+            this->title = tag->title().toCString();
+            this->artist = tag->artist().toCString();
+
+            TagLib::PropertyMap tags = f.file()->properties();
         }
-#endif
-        //cout << "length      - " << minutes << ":" << setfill('0') << setw(2) << seconds << endl;
-    }
+
+        if(!f.isNull() && f.audioProperties())
+        {
+            TagLib::AudioProperties *properties = f.audioProperties();
+
+            this->seconds = properties->lengthInSeconds();
+
+            int seconds = properties->lengthInSeconds() % 60;
+            //int minutes = (properties->lengthInSeconds() - seconds) / 60;
+        }
 }
 
-#if (FALSE)
-inline void decode_utf8(const std::string& bytes, std::wstring& wstr)
-{
-    utf8::utf8to32(bytes.begin(), bytes.end(), std::back_inserter(wstr));
-}
-
-inline void encode_utf8(const std::wstring& wstr, std::string& bytes)
-{
-    utf8::utf32to8(wstr.begin(), wstr.end(), std::back_inserter(bytes));
-}
-#endif
-void decode_utf8(std::string const & utf8str, std::wstring& wstr)
-{
-     std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> conv;
-     std::u32string utf32str = conv.from_bytes(utf8str);
-
-     wstr = L"";
-     for (char32_t u : utf32str)
-     {
-         /* ... */
-         wstr += u;
-    }
-}
-
-
+/**
+ * This checks if mp3 title tag is not included to filename. Adds to end of basename when tag not found.
+ * Characters from A to z are used in comparison. mp3 files are not expected to have standard character set.
+ */
 std::string Mp3Tags::getCombinedName()
 {
     string basename = "";
@@ -196,11 +125,7 @@ std::string Mp3Tags::getCombinedName()
         for (int i : match_positions) {
             ws_str[i] = '.';
         }
-        //std::locale::global(std::locale("fi_FI.UTF-8"));
-        //string fname = filename;
-        // std::wstring wfname(filename.begin(), filename.end());
         wstring wfname;
-        //decode_utf8(filename, wfname);
         try {
             decode_utf8(filename, wfname);
         } catch (...) {
@@ -216,11 +141,9 @@ std::string Mp3Tags::getCombinedName()
             wfname[i] = '.';
         }
 
-        //std::wstring wfname(fname.begin(), fname.end());
-        std::cout << "filename " << filename << std::endl;
         boost::wregex re(ws_str);
         boost::wsmatch m;
-        //if (!std::regex_search(filename, m, re))
+
         if (!boost::regex_search(wfname, m, re))
         {
             // combine tokens except last one, basename, title and .mp3Tags
@@ -250,8 +173,8 @@ std::string Mp3Tags::toString() const
 {
     std::string result = "Path:";
     result += this->local_path;
-    result +=" addition pos:" + std::to_string(file_index);
     result +=" seconds:"+std::to_string(seconds);
+    result +=" read index:" + std::to_string(file_index);
     return result;
 }
 

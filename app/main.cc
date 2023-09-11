@@ -17,7 +17,6 @@ int main(int argc, char *argv[])
                 << NLOHMANN_JSON_VERSION_MINOR << "."
                 << NLOHMANN_JSON_VERSION_PATCH << "\n";
 
-        print_hello_world();
         std::cout << "Se toimii!\n";
         std::cout << "No files given as parameter\n";
     } else {

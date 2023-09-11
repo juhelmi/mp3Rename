@@ -3,7 +3,7 @@
 all: prepare dependency build_binary
 
 build_binary:
-	cmake --build build/ -j 10
+	cmake --build build/ -j
 
 dependency:
 	cd build && cmake .. --graphviz=graph.dot && dot -Tpng graph.dot -o graphImage.png

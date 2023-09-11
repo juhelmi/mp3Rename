@@ -11,6 +11,9 @@
 #include <nlohmann/json.hpp>
 #include <exception>
 
+#include "utf8.h"
+#include <codecvt>
+
 using namespace std;
 using std::string;
 using json = nlohmann::json;
@@ -19,7 +22,7 @@ class char_exception: public std::exception
 {
   virtual const char* what() const throw()
   {
-    return "My exception happened";
+    return "Exception in character conversion.";
   }
 } charex;
 
@@ -88,9 +91,6 @@ void decode_windows_chars(std::string const & utf8str, std::wstring& wstr)
      for (char32_t u : utf32str)
      {
          /* ... */
-         if (u>127 && u < 255) {
-             cout << u <<endl;
-         }
          switch (u) {
              default:
                 wstr += u;
@@ -116,3 +116,27 @@ void decode_ascii_chars(std::string const & utf8str, std::wstring& wstr)
     }
 }
 
+#if (FALSE)
+inline void decode_utf8(const std::string& bytes, std::wstring& wstr)
+{
+    utf8::utf8to32(bytes.begin(), bytes.end(), std::back_inserter(wstr));
+}
+
+inline void encode_utf8(const std::wstring& wstr, std::string& bytes)
+{
+    utf8::utf32to8(wstr.begin(), wstr.end(), std::back_inserter(bytes));
+}
+#endif
+
+void decode_utf8(std::string const & utf8str, std::wstring& wstr)
+{
+     std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> conv;
+     std::u32string utf32str = conv.from_bytes(utf8str);
+
+     wstr = L"";
+     for (char32_t u : utf32str)
+     {
+         /* ... */
+         wstr += u;
+    }
+}
