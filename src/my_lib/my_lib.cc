@@ -4,6 +4,7 @@
 #include "mp3Tags.hpp"
 
 #include <utility>
+#include <memory>
 
 // from tagreader.cpp
 #include <iostream>
@@ -74,12 +75,11 @@ vector< pair<fs::path, Mp3Tags>> get_files_under_directory(fs::path dir, std::st
     return result;
 }
 
-rename_map_t print_tags_for_files(int argc, char **argv)
+void get_new_filename_list_from_mp3_tags(int argc, char **argv, rename_map_t& result)
 {
     fs::path fpath;
     std::map<string, Mp3Tags> m;
     vector<Mp3Tags> skippedFiles;
-    rename_map_t result;    // use smart_ptr later
 
     if (argc == 1)
     {
@@ -99,6 +99,7 @@ rename_map_t print_tags_for_files(int argc, char **argv)
             {
                 //std::cout  << v.toString() << std::endl;
                 mp3Count++;
+                cout << v.getRunningNr() << " " << v.getCombinedName() << endl;
                 result.insert({k, v.getCombinedName()});
             } else {
                 skippedFiles.insert(skippedFiles.end(), v);
@@ -112,5 +113,5 @@ rename_map_t print_tags_for_files(int argc, char **argv)
         std::cout << "Mp3 count " << mp3Count << " Skipped " << skippedFiles.size() << " Total " << m.size()+skippedFiles.size() << "\n";
     }
 
-    return result;
+    return ;
 }

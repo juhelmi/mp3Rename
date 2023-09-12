@@ -24,5 +24,6 @@ public:
     std::string getPath();
     std::string getFullpath();
     std::string getCombinedName();
+    int getRunningNr();
 };
 

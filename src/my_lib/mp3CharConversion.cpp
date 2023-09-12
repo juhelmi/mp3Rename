@@ -121,12 +121,13 @@ inline void decode_utf8(const std::string& bytes, std::wstring& wstr)
 {
     utf8::utf8to32(bytes.begin(), bytes.end(), std::back_inserter(wstr));
 }
+#endif
 
-inline void encode_utf8(const std::wstring& wstr, std::string& bytes)
+void encode_utf8(const std::wstring& wstr, std::string& bytes)
 {
     utf8::utf32to8(wstr.begin(), wstr.end(), std::back_inserter(bytes));
 }
-#endif
+
 
 void decode_utf8(std::string const & utf8str, std::wstring& wstr)
 {

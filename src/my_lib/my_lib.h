@@ -5,5 +5,5 @@
 
 typedef  std::map<std::string, std::string> rename_map_t;
 
-rename_map_t print_tags_for_files(int argc, char **argv);
+void get_new_filename_list_from_mp3_tags(int argc, char **argv, rename_map_t& result);
 

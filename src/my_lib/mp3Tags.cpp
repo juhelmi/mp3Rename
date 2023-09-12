@@ -23,7 +23,7 @@
 
 #include <codecvt>
 #include <locale>
-//#include "utf8.h"
+#include "utf8.h"
 
 #include "mp3CharConversion.hpp"
 #include <fstream>
@@ -101,6 +101,7 @@ std::string Mp3Tags::getCombinedName()
         string filename = tokens.back();
         string lower_name = boost::to_lower_copy(filename);
         string ext = ".mp3";
+        string utf8title = "";
         int end_pos = lower_name.size() - ext.size();
         if (end_pos <= 0) end_pos = 0;
         string lower_end = lower_name.substr(end_pos, ext.size());
@@ -112,6 +113,7 @@ std::string Mp3Tags::getCombinedName()
         wstring ws_str; // = this->title;
         try {
                   decode_windows_chars(this->title, ws_str);  //decode_utf8(this->title, ws_str);
+                  encode_utf8(ws_str, utf8title);
         } catch (...) {
             cout << "Problem in " << filename << " conversion, title." << endl;
             decode_ascii_chars(this->title, ws_str);
@@ -154,7 +156,7 @@ std::string Mp3Tags::getCombinedName()
             }
             new_local_name += filename;
             new_local_name += "_";
-            new_local_name += this->title;
+            new_local_name += utf8title;
             new_local_name += ".mp3";
             this->combinedName = new_local_name;
             return new_local_name;
@@ -204,6 +206,9 @@ std::string Mp3Tags::getFullpath()
     return this->full_path;
 }
 
-
+int Mp3Tags::getRunningNr()
+{
+    return this->file_index;
+};
 
 

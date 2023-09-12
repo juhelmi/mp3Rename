@@ -7,3 +7,5 @@ void decode_windows_chars(std::string const & utf8str, std::wstring& wstr);
 void decode_ascii_chars(std::string const & utf8str, std::wstring& wstr);
 
 void decode_utf8(std::string const & utf8str, std::wstring& wstr);
+
+void encode_utf8(const std::wstring& wstr, std::string& bytes);
