@@ -143,7 +143,7 @@ std::string Mp3Tags::getCombinedName()
             wfname[i] = '.';
         }
 
-        boost::wregex re(ws_str);
+        boost::wregex re(ws_str,  boost::regex::icase);
         boost::wsmatch m;
 
         if (!boost::regex_search(wfname, m, re))

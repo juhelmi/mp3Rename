@@ -15,6 +15,8 @@
 using namespace std;
 namespace fs = std::filesystem;
 
+bool debug_run = true;
+
 void print_directory_data(ofstream& o, std::vector<pair<int, string>> &dir_data, string dir_name)
 {
     if (dir_data.size() > 0) {
@@ -113,7 +115,8 @@ int main(int argc, char *argv[])
             {
                 cout << "Could not copy to: " << target_root+v << " reason " << e.what() << '\n';
             }
-            if (++i > 10) {
+            if (debug_run && (++i > 10) ) {
+                cout << "Stopped copying\n";
                 break;
             }
         }
