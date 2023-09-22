@@ -4,8 +4,9 @@
 #include <filesystem>
 //#include <format>
 #include <boost/format.hpp>
-#include <list>
-#include <utility>
+
+
+
 
 #include <nlohmann/json.hpp>
 
@@ -15,7 +16,7 @@
 using namespace std;
 namespace fs = std::filesystem;
 
-bool debug_run = true;
+bool debug_run = false;
 
 void print_directory_data(ofstream& o, std::vector<pair<int, string>> &dir_data, string dir_name)
 {
@@ -52,16 +53,24 @@ void generate_file_index_for_files(rename_map_t& copied_files, std::string outpu
         if (current_dir != prev_dir) {
             // print collected data for prev dir
             print_directory_data(o, dir_data, prev_dir);
-            //o << boost::format("Dir: %1$d ")%running_index << current_dir << endl;
             prev_dir = current_dir;
             //dir_data.clear();
         }
-        //dir_data.push_back(make_pair(running_index, p.native()));
         dir_data.push_back(make_pair(running_index, p.filename()));
         running_index++;
     }
+    // Last directory needs to be printed also
     print_directory_data(o, dir_data, current_dir);
     o.close();
+}
+
+void create_directory_and_parents(std::filesystem::path p)
+{
+    auto parent = p.parent_path();
+    if (! fs::exists(parent)) {
+        create_directory_and_parents(parent);
+    }
+    fs::create_directory(p);
 }
 
 int main(int argc, char *argv[])
@@ -102,20 +111,24 @@ int main(int argc, char *argv[])
 
                 if (! fs::exists(p.parent_path())) {
                     cout << "Creates parent path " << p.parent_path() << endl;
-                    fs::create_directory(p.parent_path());
+                    create_directory_and_parents(p.parent_path());
                 }
-                if (! fs::exists(p)) {
-                    cout << "Copying " << k << "\nto " << p << " location\n";
-                    fs::copy_file(k, p);
+                if (debug_run) {
+                    cout << "Not copied in debug mode, file " << k << endl;
                 } else {
-                    cout << "File " << p << " already exists, not copied\n";
+                    if (! fs::exists(p)) {
+                        cout << "Copying " << k << "\nto " << p << "\n";
+                        fs::copy_file(k, p);
+                    } else {
+                        cout << "File " << p << " already exists, not copied\n";
+                    }
                 }
             }
             catch (fs::filesystem_error& e)
             {
                 cout << "Could not copy to: " << target_root+v << " reason " << e.what() << '\n';
             }
-            if (debug_run && (++i > 10) ) {
+            if (false && debug_run && (++i > 10) ) {
                 cout << "Stopped copying\n";
                 break;
             }

@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS        OFF)
 
 set(CHAR_CONVERSION_FILE    "char_conversion.json")
+set(WILDCARD_CONVERSION_FILE    "wildcard_conversion.json")
 
 # BOOST_ROOT=path
 #set(BOOST_ROOT /home/juha/work/Cpp/mp3Rename/build/boost_root)

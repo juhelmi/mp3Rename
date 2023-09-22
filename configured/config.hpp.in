@@ -11,3 +11,4 @@ static constexpr std::int32_t project_version_minor{@PROJECT_VERSION_MINOR@};
 static constexpr std::int32_t project_version_patch{@PROJECT_VERSION_PATCH@};
 
 static constexpr std::string_view char_conversion_json_file ="@CHAR_CONVERSION_FILE@";
+static constexpr std::string_view wildcard_conversion_json_file ="@WILDCARD_CONVERSION_FILE@";

@@ -113,6 +113,7 @@ std::string Mp3Tags::getCombinedName()
         wstring ws_str; // = this->title;
         try {
                   decode_windows_chars(this->title, ws_str);  //decode_utf8(this->title, ws_str);
+                  // convert special chars like '?',  '*',  '\' and '/' to '_' or user defined
                   encode_utf8(ws_str, utf8title);
         } catch (...) {
             cout << "Problem in " << filename << " conversion, title." << endl;

@@ -99,7 +99,7 @@ void get_new_filename_list_from_mp3_tags(int argc, char **argv, rename_map_t& re
             {
                 //std::cout  << v.toString() << std::endl;
                 mp3Count++;
-                cout << v.getRunningNr() << " " << v.getCombinedName() << endl;
+                //cout << v.getRunningNr() << " " << v.getCombinedName() << endl;
                 result.insert({k, v.getCombinedName()});
             } else {
                 skippedFiles.insert(skippedFiles.end(), v);
