@@ -1,4 +1,4 @@
-kinsnode {
+node {
     // Git checkout before load source the file
     checkout scm
 
