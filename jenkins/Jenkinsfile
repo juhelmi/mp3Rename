@@ -16,3 +16,5 @@ node {
     example.exampleMethod()
     example.otherExampleMethod()
 }
+
+// source https://stackoverflow.com/questions/37800195/how-do-you-load-a-groovy-file-and-execute-it?newreg=b3b212657da948d8ae57ee919dd7490a
